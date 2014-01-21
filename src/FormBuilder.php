@@ -81,7 +81,50 @@ class FormBuilder extends BaseFormBuilder
 			}
 		}
 
-		return '<input'.$this->html->attributes($options).'>';
+		return '<input' . $this->html->attributes($options) . '>';
+	}
+
+	/**
+	 * Open a form group (Bootstrap 3)
+	 *
+	 * @param  string $name
+	 * @param  string $class
+	 *
+	 * @return string
+	 */
+	public function openGroup($name = null, $class = null)
+	{
+		$attributes['class'] = $class ? $class . ' form-group' : 'form-group';
+
+		if ($name && $this->hasErrors($name)) {
+			$attributes['class'] .= ' ' . $this->getErrorClass(null, $name);
+		}
+
+		return '<div '.$this->html->attributes($attributes).'>';
+	}
+
+	/**
+	 * Close a form group (Bootstrap 3)
+	 *
+	 * @return string
+	 */
+	public function closeGroup()
+	{
+		return '</div>';
+	}
+
+	/**
+	 * Get the error class for a specific input.
+	 *
+	 * @param  string $name
+	 *
+	 * @return string
+	 */
+	public function error($name)
+	{
+		if ($this->hasErrors($name)) {
+			return $this->getErrorClass();
+		}
 	}
 
 	/**
