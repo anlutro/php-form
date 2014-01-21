@@ -149,7 +149,14 @@ class FormBuilder extends BaseFormBuilder
 		 */
 		$errors = $this->session->get('errors');
 
-		return $errors->has($this->transformKey($name));
+		if (is_array($name)) {
+			foreach ($name as $key) {
+				if ($errors->has($this->transformKey($key))) return true;
+			}
+			return false;
+		} else {
+			return $errors->has($this->transformKey($name));
+		}
 	}
 
 	/**
@@ -179,5 +186,14 @@ class FormBuilder extends BaseFormBuilder
 	{
 		$this->errorClass = $class;
 		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getIdAttribute($name, $attributes)
+	{
+		return array_key_exists('id', $attributes)
+			? $attributes['id'] : $name;
 	}
 }
