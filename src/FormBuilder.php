@@ -84,6 +84,11 @@ class FormBuilder extends BaseFormBuilder
 		return '<input' . $this->html->attributes($options) . '>';
 	}
 
+	public function group($name, \Closure $callback)
+	{
+		return $this->openGroup($name) . $callback() . $this->closeGroup();
+	}
+
 	/**
 	 * Open a form group (Bootstrap 3)
 	 *
