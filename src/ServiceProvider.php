@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\LaravelSettings;
+namespace anlutro\LaravelForm;
 
 use Illuminate\Html\HtmlServiceProvider as BaseServiceProvider;
 
