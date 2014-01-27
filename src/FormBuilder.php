@@ -6,6 +6,8 @@ use Illuminate\Html\FormBuilder as BaseFormBuilder;
 
 class FormBuilder extends BaseFormBuilder
 {
+	protected $errorClass;
+
 	/**
 	 * @see getValueAttribute
 	 */
