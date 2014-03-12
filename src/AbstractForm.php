@@ -24,6 +24,11 @@ class AbstractForm
 		$this->model = $model;
 	}
 
+	public function value($name)
+	{
+		return $this->form->getOldInput($name) ?: $this->getTransformedOutput($name);
+	}
+
 	public function getTransformedOutput($name)
 	{
 		$data = $this->getValueFromModel($name);

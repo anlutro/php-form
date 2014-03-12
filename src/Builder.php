@@ -63,6 +63,11 @@ class Builder
 		return $this->form->close();
 	}
 
+	public function getOldInput($name)
+	{
+		return $thid->form->old($name);
+	}
+
 	public function getRequestData()
 	{
 		return $this->request !== null ? $this->request->input() : [];
