@@ -33,6 +33,11 @@ class Builder
 		}
 	}
 
+	public function checkbox($name, $checked, array $attributes = array())
+	{
+		return $this->form->checkbox($name, '1', $checked, $attributes);
+	}
+
 	public function select($name, array $options, $selected, array $attributes = array())
 	{
 		return $this->form->select($name, $options, $selected, $attributes);

@@ -100,7 +100,9 @@ class AbstractForm
 			}
 
 			if ($type == 'checkbox') {
-				$input[$key] = (array_key_exists($key, $input));
+				$input[$key] = array_key_exists($key, $input);
+			} elseif ($type == 'checkboxes') {
+				$input[$key] = array_key_exists($key, $input) ? $input[$key] : array();
 			}
 		}
 
@@ -112,6 +114,13 @@ class AbstractForm
 		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
 
 		return $this->form->input($type, $name, $this->getTransformedOutput($name), $attributes);
+	}
+
+	public function checkbox($name, array $attributes = array())
+	{
+		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
+
+		return $this->form->checkbox($name, $this->getTransformedOutput($name), $attributes);
 	}
 
 	public function select($name, array $attributes = array())
