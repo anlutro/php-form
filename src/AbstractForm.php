@@ -9,6 +9,7 @@ class AbstractForm
 	protected $form;
 	protected $input;
 	protected $model;
+	protected $validator;
 	protected $inputs = [];
 	protected $transformers = [];
 	protected $defaultInputType = 'text';
