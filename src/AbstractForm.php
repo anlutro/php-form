@@ -166,5 +166,10 @@ class AbstractForm
 		return $this->validator->passes();
 	}
 
+	public function getErrors()
+	{
+		return $this->validator->errors();
+	}
+
 	public function getValidationRules() {}
 }
