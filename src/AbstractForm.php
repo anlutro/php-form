@@ -70,14 +70,16 @@ class AbstractForm
 		return str_replace(array('.', '[]', '[', ']'), array('_', '', '.', ''), $key);
 	}
 
+	protected function checkInputSet()
+	{
+		if ($this->input === null) {
+			$this->input = $this->form->getRequestData();
+		}
+	}
+
 	public function getInput($input = null)
 	{
-		if ($input === null) {
-			if ($this->input === null) {
-				$this->input = $this->form->getRequestData();
-			}
-			$input = $this->input;
-		}
+		if ($input === null) $this->checkInputSet();
 
 		// look for input methods to convert input
 		foreach ($input as $key => &$value) {
@@ -88,8 +90,13 @@ class AbstractForm
 		}
 
 		// convert special input types
-		foreach ($this->inputs as $key => $value) {
-			if ($value == 'checkbox') {
+		foreach ($this->inputs as $key => $type) {
+			if ($type == 'append') {
+				$method = 'input' . Str::studly($key);
+				$input[$key] = $this->$method();
+			}
+
+			if ($type == 'checkbox') {
 				$input[$key] = (array_key_exists($key, $input));
 			}
 		}
@@ -140,7 +147,11 @@ class AbstractForm
 
 		$type = $this->inputs[$name];
 
-		if ($type === 'multiselect') {
+		if ($type == 'append') {
+			throw new \InvalidArgumentException("Input name [$name] has type [$type] and cannot be rendered in the form.");
+		}
+
+		if ($type == 'multiselect') {
 			$attributes['multiple'] = 'multiple';
 			$type = 'select';
 		}
@@ -152,12 +163,7 @@ class AbstractForm
 	{
 		if (!$rules = $this->getValidationRules()) return true;
 
-		if ($input === null) {
-			if ($this->input === null) {
-				$this->input = $this->form->getRequestData();
-			}
-			$input = $this->input;
-		}
+		if ($input === null) $this->checkInputSet();
 
 		if ($this->validator === null) {
 			$this->validator = $this->form->makeValidator($input, $rules);
