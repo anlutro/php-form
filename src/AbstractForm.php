@@ -79,7 +79,10 @@ class AbstractForm
 
 	public function getInput($input = null)
 	{
-		if ($input === null) $this->checkInputSet();
+		if ($input === null) {
+			$this->checkInputSet();
+			$input = $this->input;
+		}
 
 		// look for input methods to convert input
 		foreach ($input as $key => &$value) {
@@ -163,7 +166,10 @@ class AbstractForm
 	{
 		if (!$rules = $this->getValidationRules()) return true;
 
-		if ($input === null) $this->checkInputSet();
+		if ($input === null) {
+			$this->checkInputSet();
+			$input = $this->input;
+		}
 
 		if ($this->validator === null) {
 			$this->validator = $this->form->makeValidator($input, $rules);
