@@ -48,6 +48,11 @@ class Builder
 		return $this->form->open($attributes);
 	}
 
+	public function submit($value, array $attributes = array())
+	{
+		return $this->form->submit($value, $attributes);
+	}
+
 	public function close()
 	{
 		return $this->form->close();

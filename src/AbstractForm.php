@@ -78,10 +78,18 @@ class AbstractForm
 			$input = $this->input;
 		}
 
+		// look for input methods to convert input
 		foreach ($input as $key => &$value) {
 			$method = 'input' . $this->nameToStudly($key);
 			if (method_exists($this, $method)) {
 				$value = $this->$method($value);
+			}
+		}
+
+		// convert special input types
+		foreach ($this->inputs as $key => $value) {
+			if ($value == 'checkbox') {
+				$input[$key] = (array_key_exists($key, $input));
 			}
 		}
 
@@ -111,6 +119,11 @@ class AbstractForm
 	public function open(array $attributes = array())
 	{
 		return $this->form->open($attributes);
+	}
+
+	public function submit($value, array $attributes = array())
+	{
+		return $this->form->submit($value, $attributes);
 	}
 
 	public function close()
