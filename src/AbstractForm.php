@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Collection;
 class AbstractForm
 {
 	protected $form;
+	protected $input;
+	protected $model;
 	protected $inputs = [];
 	protected $transformers = [];
 	protected $defaultInputType = 'text';
 
-	public function __construct(
-		Builder $form
-	) {
+	public function __construct(Builder $form)
+	{
 		$this->form = $form;
 	}
 
@@ -42,6 +43,7 @@ class AbstractForm
 
 	public function getValueFromModel($name)
 	{
+		if ($this->model === null) return null;
 		$segments = explode('.', $this->transformKey($name));
 		$data = $this->model;
 
@@ -67,8 +69,15 @@ class AbstractForm
 		return str_replace(array('.', '[]', '[', ']'), array('_', '', '.', ''), $key);
 	}
 
-	public function getInput(array $input)
+	public function getInput($input = null)
 	{
+		if ($input === null) {
+			if ($this->input === null) {
+				$this->input = $this->form->getRequestData();
+			}
+			$input = $this->input;
+		}
+
 		foreach ($input as $key => &$value) {
 			$method = 'input' . $this->nameToStudly($key);
 			if (method_exists($this, $method)) {
@@ -84,6 +93,14 @@ class AbstractForm
 		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
 
 		return $this->form->input($type, $name, $this->getTransformedOutput($name), $attributes);
+	}
+
+	public function select($name, array $attributes = array())
+	{
+		$method = 'get' . Str::studly($name) . 'Options';
+		$options = $this->$method();
+		$selected = $this->getValueFromModel($name);
+		return $this->form->select($name, $options, $selected, $attributes);
 	}
 
 	public function label($name, $text, array $attributes = array())
@@ -114,6 +131,26 @@ class AbstractForm
 			$type = 'select';
 		}
 
-		return $type;
+		return [$type, $attributes];
 	}
+
+	public function isValid($input = null)
+	{
+		if (!$rules = $this->getValidationRules()) return true;
+
+		if ($input === null) {
+			if ($this->input === null) {
+				$this->input = $this->form->getRequestData();
+			}
+			$input = $this->input;
+		}
+
+		if ($this->validator === null) {
+			$this->validator = $this->form->makeValidator($input, $rules);
+		}
+
+		return $this->validator->passes();
+	}
+
+	public function getValidationRules() {}
 }

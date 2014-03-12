@@ -11,12 +11,12 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 		$self = get_class($this);
 		$namespace = substr($self, 0, strrpos($self, '\\'));
 		$class = $namespace . '\\' . $class;
-		return new $class($this->makeFormBuilder($this->makeLaravelFormBuilder()));
+		return new $class($this->makeFormBuilder($this->makeLaravelFormBuilder(), $this->mockValidationFactory()));
 	}
 
-	protected function makeFormBuilder($laravelForm)
+	protected function makeFormBuilder($laravelForm, $valFact)
 	{
-		return new \anlutro\LaravelForm\Builder($laravelForm);
+		return new \anlutro\LaravelForm\Builder($laravelForm, $valFact);
 	}
 
 	protected function makeLaravelFormBuilder()
@@ -25,6 +25,11 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 		$html = $this->makeHtmlBuilder($url);
 		$token = $this->getCsrfToken();
 		return new \Illuminate\Html\FormBuilder($html, $url, $token);
+	}
+
+	protected function mockValidationFactory()
+	{
+		return m::mock('Illuminate\Validation\Factory');
 	}
 
 	protected function mockUrlGenerator()
