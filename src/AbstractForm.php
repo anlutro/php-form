@@ -50,7 +50,15 @@ class AbstractForm
 	public function getValueFromModel($name)
 	{
 		if ($this->model === null) return null;
-		$segments = explode('.', $this->transformKey($name));
+
+		$segments = $this->transformKey($name);
+
+		if ($args = $this->hasTransformer($segments)) {
+			return $this->callTransformer($args);
+		}
+
+		$segments = explode('.', $segments);
+
 		$data = $this->model;
 
 		foreach ($segments as $key) {
@@ -68,6 +76,22 @@ class AbstractForm
 		}
 
 		return $data;
+	}
+
+	public function hasTransformer($match)
+	{
+		foreach ($this->transformers as $key => $value) {
+			$pattern = '/'.preg_replace('/\{(\w+?)\}/', '(.+)', str_replace('.', '\.', $key)).'/';
+			if (preg_match($pattern, $match, $matches)) {
+				return [$key] + $matches;
+			}
+		}
+	}
+
+	public function callTransformer($args)
+	{
+		$method = $this->transformers[array_shift($args)];
+		return call_user_func_array([$this, $method], $args);
 	}
 
 	public function transformKey($key)
