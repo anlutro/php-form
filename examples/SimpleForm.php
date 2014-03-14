@@ -38,24 +38,22 @@ class SimpleForm extends anlutro\LaravelForm\AbstractForm
 	}
 
 	/**
-	 * If you need nested arrays in forms, you need to map methods to fields
-	 * manually as shown below. Leave out the words "input" and "output"
+	 * Sometimes you need custom behaviour that can't easily be mapped to
+	 * methods automatically. Transformers to the rescue!
 	 */
 	protected $transformers = [
-		'user[name]' => 'UserName',
-		'user[friends][{key}][name]' => 'UserFriendName'
+		'products.{key}.price' => 'getProductPrice',
 	];
 
 	/**
-	 * An example of how to implement the user[friends][key][name] field. In
-	 * this case this is equivalent to the default behaviour, but you get the
-	 * point.
-	 *
-	 * We leave out ouputUserFriendName to leave behaviour as default
+	 * This method gets called every time the form wants to output an input
+	 * like products[5][price], with 5 being given as an argument. In this
+	 * example we utilize this to access pivot data as well as a fallback.
 	 */
-	public function outputUserFriendName($key)
+	public function getProductPrice($key)
 	{
-		return $this->model->user->friends[$key]->name;
+		$product = $this->model->products->find($key);
+		return $product->pivot->price ?: $product->default_price;
 	}
 
 	/**
