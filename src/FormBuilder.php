@@ -17,6 +17,20 @@ class FormBuilder extends BaseFormBuilder
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	protected function checkable($type, $name, $value, $checked, $options)
+	{
+		if ($checked === null) {
+			$checked = $this->getCheckedState($type, $name, $value, $checked);
+		}
+
+		if ($checked) $options['checked'] = 'checked';
+
+		return $this->input($type, $name, $value, $options);
+	}
+
+	/**
 	 * Returns the 'checked' string if the input with the given name is checked.
 	 *
 	 * @param  string $name
