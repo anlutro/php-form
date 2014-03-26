@@ -170,7 +170,7 @@ class AbstractForm
 		return $this->form->open($attributes);
 	}
 
-	public function submit($value, array $attributes = array())
+	public function submit($value = null, array $attributes = array())
 	{
 		return $this->form->submit($value, $attributes);
 	}

@@ -17,6 +17,13 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('</form', $form->close());
 	}
 
+	public function testSubmit()
+	{
+		$form = $this->makeForm('SimpleFormStub');
+		$this->assertContains('<input', $form->submit());
+		$this->assertContains('type="submit"', $form->submit());
+	}
+
 	public function testInput()
 	{
 		$model = new \StdClass; $model->foo = 'bar';
@@ -33,7 +40,9 @@ class SimpleFormTest extends TestCase
 	{
 		$form = $this->makeForm('SimpleFormStub');
 		$str = $form->label('foo', 'This is a label');
-		$this->assertEquals('<label for="foo">This is a label</label>', $str);
+		$this->assertContains('<label', $str);
+		$this->assertContains('for="foo"', $str);
+		$this->assertContains('>This is a label</label>', $str);
 	}
 
 	public function testInputType()

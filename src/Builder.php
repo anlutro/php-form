@@ -2,20 +2,20 @@
 namespace anlutro\LaravelForm;
 
 use Illuminate\Html\HtmlBuilder;
-use Illuminate\Html\FormBuilder;
 use Illuminate\Session\Store;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 
 class Builder
 {
-	protected $form;
+	protected $html;
+	protected $session;
 	protected $request;
 	protected $validator;
 
-	public function __construct(FormBuilder $form, Factory $validator)
+	public function __construct(HtmlBuilder $html, Factory $validator)
 	{
-		$this->form = $form;
+		$this->html = $html;
 		$this->validator = $validator;
 	}
 
@@ -24,48 +24,126 @@ class Builder
 		$this->request = $request;
 	}
 
+	public function setSession(Store $session)
+	{
+		$this->session = $session;
+	}
+
+	public function open(array $attributes = array())
+	{
+		if (!isset($attributes['method'])) {
+			$attributes['method'] = 'post';
+		}
+
+		$attributes['accept-charset'] = 'UTF-8';
+
+		if (isset($attributes['files']) && $attributes['files']) {
+			$attributes['enctype'] = 'multipart/form-data';
+		}
+
+		unset($attributes['files']);
+
+		$append = $this->getAppendage($attributes);
+
+		$attributes = $this->html->attributes($attributes);
+
+		return '<form'.$attributes.'>'.$append;
+	}
+
+	protected function getAppendage(array $attributes)
+	{
+		$append = '';
+
+		$method = strtoupper($attributes['method']);
+
+		if ($method !== 'GET' && $method !== 'POST') {
+			$append .= $this->input('hidden', '_method', $method);
+		}
+
+		if ($method !== 'GET') {
+			$append .= $this->token();
+		}
+
+		return $append;
+	}
+
 	public function input($type, $name, $value, array $attributes = array())
 	{
+		if (!isset($attributes['name'])) $attributes['name'] = $name;
+		if (!isset($attributes['id'])) $attributes['id'] = $attributes['name'];
+
 		if ($type == 'textarea') {
-			return $this->form->textarea($name, $value, $attributes);
+			$attributes = $this->html->attributes($attributes);
+			return "<textarea $attributes>".e($value)."</textarea>";
 		} else {
-			return $this->form->input($type, $name, $value, $attributes);
+			$attributes['type'] = $type;
+			$attributes['value'] = $value;
+			$attributes = $this->html->attributes($attributes);
+			return '<input '.$attributes.'>';
 		}
 	}
 
 	public function checkbox($name, $checked, array $attributes = array())
 	{
-		return $this->form->checkbox($name, '1', $checked, $attributes);
+		if (!isset($attributes['name'])) $attributes['name'] = $name;
+		if (!isset($attributes['id'])) $attributes['id'] = $attributes['name'];
+
+		if ($checked) {
+			$attributes['checked'] = 'checked';
+		} else {
+			unset($attributes['checked']);
+		}
+
+		return $this->input('checkbox', $attributes);
 	}
 
 	public function select($name, array $options, $selected, array $attributes = array())
 	{
-		return $this->form->select($name, $options, $selected, $attributes);
+		if (!isset($attributes['name'])) $attributes['name'] = $name;
+		if (!isset($attributes['id'])) $attributes['id'] = $attributes['name'];
+
+		$attributes = $this->html->attributes($attributes);
+		$html = "<select $attributes>";
+
+		foreach ($options as $value => $label) {
+			$html .= '<option value="'.$value.'">'.$label.'</option>';
+		}
+
+		return $html . '</select>';
 	}
 
 	public function label($name, $text, array $attributes = array())
 	{
-		return $this->form->label($name, $text, $attributes);
+		if (!isset($attributes['name'])) $attributes['name'] = $name;
+		if (!isset($attributes['id'])) $attributes['id'] = $attributes['name'].'__label';
+		if (!isset($attributes['for'])) $attributes['for'] = $name;
+
+		$attributes = $this->html->attributes($attributes);
+		return "<label $attributes>$text</label>";
 	}
 
-	public function open(array $attributes = array())
+	public function submit($value = null, array $attributes = array())
 	{
-		return $this->form->open($attributes);
+		return $this->input('submit', null, $value, $attributes);
 	}
 
-	public function submit($value, array $attributes = array())
+	public function token()
 	{
-		return $this->form->submit($value, $attributes);
+		if ($this->session !== null) {
+			return $this->input('hidden', '_token', $this->session->getToken());
+		}
 	}
 
 	public function close()
 	{
-		return $this->form->close();
+		return '</form>';
 	}
 
 	public function getOldInput($name)
 	{
-		return $thid->form->old($name);
+		if (isset($this->session)) {
+			return $this->session->getOldInput($this->transformKey($name));
+		}
 	}
 
 	public function getRequestData()

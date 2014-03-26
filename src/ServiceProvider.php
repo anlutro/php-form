@@ -6,7 +6,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function register()
 	{
 		$this->app->bindShared('anlutro\LaravelForm\Builder', function($app) {
-			$builder = new Builder($app['form'], $app['validator']);
+			$builder = new Builder($app['html'], $app['validator']);
 
 			if ($app->bound('request')) {
 				$builder->setRequest($app['request']);
