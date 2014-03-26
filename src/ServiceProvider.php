@@ -1,22 +1,27 @@
 <?php
 namespace anlutro\LaravelForm;
 
-use Illuminate\Html\HtmlServiceProvider as BaseServiceProvider;
-
-class ServiceProvider extends BaseServiceProvider
+class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-	/**
-	 * Overwrite the form builder binding.
-	 *
-	 * @return void
-	 */
-	protected function registerFormBuilder()
+	public function register()
 	{
-		$this->app->bindShared('form', function($app)
-		{
-			$form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken());
+		$this->app->bindShared('anlutro\LaravelForm\Builder', function($app) {
+			$builder = new Builder($app['html'], $app['validator']);
 
-			return $form->setSessionStore($app['session.store']);
+			if ($app->bound('request')) {
+				$builder->setRequest($app['request']);
+			}
+
+			$app->rebinding('request', function($app, $request) {
+				$app['anlutro\LaravelForm\Builder']->setRequest($request);
+			});
+
+			return $builder;
 		});
+	}
+
+	public function provides()
+	{
+		return ['anlutro\LaravelForm\Builder'];
 	}
 }
