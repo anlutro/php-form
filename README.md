@@ -47,8 +47,8 @@ public function __construct(MyForm $form)
 Pass the form to your view in the controller action that shows the form:
 
 ```php
-// optional:
-$this->form->setModel(MyModel::find($id));
+$this->form->setModel(MyModel::find($id)); // optional
+$this->form->setAction(URL::route('my.route', $id)); // optional
 return View::make(['form' => $this->form]);
 ```
 
