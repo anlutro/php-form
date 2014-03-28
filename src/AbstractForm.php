@@ -37,6 +37,13 @@ class AbstractForm
 	protected $model;
 
 	/**
+	 * The form action URL.
+	 *
+	 * @var string
+	 */
+	protected $action;
+
+	/**
 	 * The validation factory.
 	 *
 	 * @var \Illuminate\Validation\Factory
@@ -80,6 +87,16 @@ class AbstractForm
 	public function setModel($model)
 	{
 		$this->model = $model;
+	}
+
+	/**
+	 * Set the form action.
+	 *
+	 * @param string $action
+	 */
+	public function setAction($action)
+	{
+		$this->action = $action;
 	}
 
 	/**
@@ -204,6 +221,10 @@ class AbstractForm
 	 */
 	public function open(array $attributes = array())
 	{
+		if ($this->action !== null) {
+			$attributes['action'] = $this->action;
+		}
+
 		return $this->form->open($attributes);
 	}
 
