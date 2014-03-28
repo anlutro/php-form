@@ -105,6 +105,26 @@ class SimpleFormTest extends TestCase
 		$str = $form->checkbox('checkbox[2]');
 		$this->assertNotContains('checked="checked"', $str);
 	}
+
+	/** @test */
+	public function checkboxInput()
+	{
+		$form = $this->makeForm('CheckboxFormStub');
+		$input = $form->getInput([]);
+		$this->assertEquals(['checkbox' => false], $input);
+		$input = $form->getInput(['checkbox' => 1]);
+		$this->assertEquals(['checkbox' => 1], $input);
+	}
+
+	/** @test */
+	public function checkboxesInput()
+	{
+		$form = $this->makeForm('CheckboxesFormStub');
+		$input = $form->getInput([]);
+		$this->assertEquals(['checkboxes' => []], $input);
+		$input = $form->getInput(['checkboxes' => [1 => 1, 3 => 1]]);
+		$this->assertEquals(['checkboxes' => [1 => 1, 3 => 1]], $input);
+	}
 }
 
 class SimpleFormStub extends \anlutro\LaravelForm\AbstractForm {}
@@ -116,4 +136,12 @@ class FormSelectStub extends \anlutro\LaravelForm\AbstractForm {
 	{
 		return [1 => 'opt1', 2 => 'opt2'];
 	}
+}
+class CheckboxFormStub extends \anlutro\LaravelForm\AbstractForm
+{
+	protected $inputs = ['checkbox' => 'checkbox'];
+}
+class CheckboxesFormStub extends \anlutro\LaravelForm\AbstractForm
+{
+	protected $inputs = ['checkboxes' => 'checkboxes'];
 }

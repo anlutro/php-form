@@ -5,6 +5,8 @@ Sick of the default Laravel 4 form builder, this is my replacement. Improvements
 - Form model binding is enforced, you can no longer pass the value of the input in the view
 - Form model binding works properly with mixes of objects and arrays as well as relationships (checkboxes and relationships work out of the box)
 - Write a class for your more advanced forms, define input types, input transformer and field presenter methods
+- If not checked, Checkbox values are false instead of not present in the input array
+- Arrays of checkbox values come back as an empty array if none are checked
 - Various bugfixes and simplification of interface
 
 Intentionally missing features from the Laravel form builder:
