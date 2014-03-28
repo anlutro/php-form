@@ -5,14 +5,16 @@ use Mockery as m;
 
 class TransformInputTest extends TestCase
 {
-	public function testSimpleTransform()
+	/** @test */
+	public function simpleTransform()
 	{
 		$form = $this->makeForm('TransformInputFormStub');
 		$input = $form->getInput(['foo' => 'bar']);
 		$this->assertEquals('Bar', $input['foo']);
 	}
 
-	public function testDateTimeTransform()
+	/** @test */
+	public function dateTimeTransform()
 	{
 		$form = $this->makeForm('TransformInputFormStub');
 		$input = $form->getInput(['date' => '01.01.12']);

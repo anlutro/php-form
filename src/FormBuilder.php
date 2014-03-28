@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Form Builder
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-form
+ */
+
 namespace anlutro\LaravelForm;
 
 use Illuminate\Support\Collection;

@@ -5,7 +5,8 @@ use Mockery as m;
 
 class Test extends TestCase
 {
-	public function testSimpleTransform()
+	/** @test */
+	public function simpleTransform()
 	{
 		$model = new \StdClass; $model->foo = 'bar';
 		$form = $this->makeForm('TransformOutputFormStub');

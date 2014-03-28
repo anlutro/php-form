@@ -1,5 +1,21 @@
-# Laravel 4 Form builder improvements
-Installation: `composer require anlutro/l4-form`
+# Laravel 4 Form Builder
+Sick of the default Laravel 4 form builder, this is my replacement. Improvements include:
+
+- Each form is its own instance - no singletons, no shared states
+- Form model binding is enforced, you can no longer pass the value of the input in the view
+- Form model binding works properly with mixes of objects and arrays as well as relationships (checkboxes and relationships work out of the box)
+- Write a class for your more advanced forms, define input types, input transformer and field presenter methods
+- Various bugfixes and simplification of interface
+
+Intentionally missing features from the Laravel form builder:
+
+- You may no longer pass an 'url' or 'route' attribute to `open()` as there is no URL generation included. The 'action' attribute must be a full URL.
+- The 'size' attribute for `textarea()` no longer works. Use 'rows' and 'cols' as you would in normal HTML.
+
+Please open an issue if you find more.
+
+## Installation
+`composer require anlutro/l4-form`
 
 Pick the latest stable version from packagist or the GitHub tag list.
 

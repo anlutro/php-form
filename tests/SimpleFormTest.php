@@ -10,21 +10,24 @@ class SimpleFormTest extends TestCase
 		m::close();
 	}
 
-	public function testOpenAndClose()
+	/** @test */
+	public function openAndClose()
 	{
 		$form = $this->makeForm('SimpleFormStub');
 		$this->assertContains('<form', $form->open());
 		$this->assertContains('</form', $form->close());
 	}
 
-	public function testSubmit()
+	/** @test */
+	public function submit()
 	{
 		$form = $this->makeForm('SimpleFormStub');
 		$this->assertContains('<input', $form->submit());
 		$this->assertContains('type="submit"', $form->submit());
 	}
 
-	public function testInput()
+	/** @test */
+	public function input()
 	{
 		$model = new \StdClass; $model->foo = 'bar';
 		$form = $this->makeForm('SimpleFormStub');
@@ -36,7 +39,8 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('value="bar"', $str);
 	}
 
-	public function testLabel($value='')
+	/** @test */
+	public function label()
 	{
 		$form = $this->makeForm('SimpleFormStub');
 		$str = $form->label('foo', 'This is a label');
@@ -45,7 +49,8 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('>This is a label</label>', $str);
 	}
 
-	public function testInputType()
+	/** @test */
+	public function inputType()
 	{
 		$form = $this->makeForm('FormInputTypeStub');
 		$str = $form->input('foo');
@@ -57,7 +62,8 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('name="bar"', $str);
 	}
 
-	public function testSelect()
+	/** @test */
+	public function select()
 	{
 		$form = $this->makeForm('FormSelectStub');
 		$str = $form->select('foo');
@@ -65,6 +71,39 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('name="foo"', $str);
 		$this->assertContains('<option value="1">opt1', $str);
 		$this->assertContains('<option value="2">opt2', $str);
+	}
+
+	/** @test */
+	public function selectWithSelected()
+	{
+		$form = $this->makeForm('FormSelectStub');
+		$form->setModel(['foo' => 2]);
+		$str = $form->select('foo');
+		$this->assertContains('<select', $str);
+		$this->assertContains('name="foo"', $str);
+		$this->assertContains('<option value="1">opt1', $str);
+		$this->assertContains('<option value="2" selected="selected">opt2', $str);
+	}
+
+	/** @test */
+	public function checkbox()
+	{
+		$form = $this->makeForm('SimpleFormStub');
+		$str = $form->checkbox('checkbox[1]');
+		$this->assertContains('<input', $str);
+		$this->assertContains('name="checkbox[1]"', $str);
+		$this->assertContains('type="checkbox"', $str);
+	}
+
+	/** @test */
+	public function checkboxChecked()
+	{
+		$form = $this->makeForm('SimpleFormStub');
+		$form->setModel(['checkbox' => [1 => true, 2 => false]]);
+		$str = $form->checkbox('checkbox[1]');
+		$this->assertContains('checked="checked"', $str);
+		$str = $form->checkbox('checkbox[2]');
+		$this->assertNotContains('checked="checked"', $str);
 	}
 }
 
