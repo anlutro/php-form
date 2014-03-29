@@ -17,7 +17,7 @@ Intentionally missing features from the Laravel form builder:
 Please open an issue if you find more.
 
 ## Installation
-`composer require anlutro/l4-form`
+`composer require anlutro/php-form`
 
 Pick the latest stable version from packagist or the GitHub tag list.
 
