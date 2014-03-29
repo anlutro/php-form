@@ -16,6 +16,8 @@ class SimpleFormTest extends TestCase
 		$form = $this->makeForm('SimpleFormStub');
 		$this->assertContains('<form', $form->open());
 		$this->assertContains('</form', $form->close());
+		$form->setAction('http://www.foo.com');
+		$this->assertContains('action="http://www.foo.com"', $form->open());
 	}
 
 	/** @test */
@@ -174,6 +176,17 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('checked', $form->checkbox('checkboxes[1]'));
 		$this->assertNotContains('checked', $form->checkbox('checkboxes[2]'));
 		$this->assertContains('checked', $form->checkbox('checkboxes[3]'));
+	}
+
+	/** @test */
+	public function nesteObjectsAndArrays()
+	{
+		$obj = new \StdClass;
+		$obj->stuff = new \Illuminate\Support\Collection([5 => ['bar' => 'baz']]);
+		$model = ['foo' => $obj];
+		$form = $this->makeForm('SimpleFormStub');
+		$form->setModel($model);
+		$this->assertContains('value="baz"', $form->input('foo[stuff][5][bar]'));
 	}
 }
 
