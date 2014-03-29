@@ -9,7 +9,8 @@ class TransformInputTest extends TestCase
 	public function simpleTransform()
 	{
 		$form = $this->makeForm('TransformInputFormStub');
-		$input = $form->getInput(['foo' => 'bar']);
+		$this->mockRequest($form, ['foo' => 'bar']);
+		$input = $form->getInput();
 		$this->assertEquals('Bar', $input['foo']);
 	}
 
@@ -17,7 +18,8 @@ class TransformInputTest extends TestCase
 	public function dateTimeTransform()
 	{
 		$form = $this->makeForm('TransformInputFormStub');
-		$input = $form->getInput(['date' => '01.01.12']);
+		$this->mockRequest($form, ['date' => '01.01.12']);
+		$input = $form->getInput();
 		$dt = $input['date'];
 		$this->assertInstanceOf('DateTime', $dt);
 		$this->assertEquals('2012-01-01', $dt->format('Y-m-d'));
