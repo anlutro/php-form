@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\LaravelForm\Tests;
+namespace anlutro\Form\Tests;
 
 use Mockery as m;
 
@@ -190,21 +190,21 @@ class SimpleFormTest extends TestCase
 	}
 }
 
-class SimpleFormStub extends \anlutro\LaravelForm\AbstractForm {}
-class FormInputTypeStub extends \anlutro\LaravelForm\AbstractForm {
+class SimpleFormStub extends \anlutro\Form\AbstractForm {}
+class FormInputTypeStub extends \anlutro\Form\AbstractForm {
 	protected $inputs = ['foo' => 'checkbox', 'bar' => 'textarea'];
 }
-class FormSelectStub extends \anlutro\LaravelForm\AbstractForm {
+class FormSelectStub extends \anlutro\Form\AbstractForm {
 	public function getFooOptions()
 	{
 		return [1 => 'opt1', 2 => 'opt2'];
 	}
 }
-class CheckboxFormStub extends \anlutro\LaravelForm\AbstractForm
+class CheckboxFormStub extends \anlutro\Form\AbstractForm
 {
 	protected $inputs = ['checkbox' => 'checkbox'];
 }
-class CheckboxesFormStub extends \anlutro\LaravelForm\AbstractForm
+class CheckboxesFormStub extends \anlutro\Form\AbstractForm
 {
 	protected $inputs = ['checkboxes' => 'checkboxes'];
 }

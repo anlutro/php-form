@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\LaravelForm\Tests;
+namespace anlutro\Form\Tests;
 
 use Mockery as m;
 
@@ -14,7 +14,7 @@ class ManualTransformerTest extends TestCase
 	}
 }
 
-class ManualTransformFormStub extends \anlutro\LaravelForm\AbstractForm
+class ManualTransformFormStub extends \anlutro\Form\AbstractForm
 {
 	protected $transformers = [
 		'foo.{key}.bar' => 'getTransformed',

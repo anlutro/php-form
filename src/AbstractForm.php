@@ -1,13 +1,13 @@
 <?php
 /**
- * Laravel 4 Form Builder
+ * PHP Form Builder
  *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
- * @package  l4-form
+ * @package  php-form
  */
 
-namespace anlutro\LaravelForm;
+namespace anlutro\Form;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 class AbstractForm
 {
 	/**
-	 * @var \anlutro\LaravelForm\Builder
+	 * @var \anlutro\Form\Builder
 	 */
 	protected $form;
 
@@ -44,13 +44,6 @@ class AbstractForm
 	protected $action;
 
 	/**
-	 * The validation factory.
-	 *
-	 * @var \Illuminate\Validation\Factory
-	 */
-	protected $validator;
-
-	/**
 	 * The inputs defined on the form.
 	 *
 	 * @var array
@@ -72,17 +65,28 @@ class AbstractForm
 	protected $defaultInputType = 'text';
 
 	/**
-	 * @param \anlutro\LaravelForm\Builder $form
+	 * @var \anlutro\Form\Adapters\ValidationAdapterInterface
+	 */
+	protected $validation;
+
+	/**
+	 * @var mixed
+	 */
+	protected $validator;
+
+	/**
+	 * @param \anlutro\Form\Builder $form
 	 */
 	public function __construct(Builder $form)
 	{
 		$this->form = $form;
+		$this->validation = $form->getValidationAdapter();
 	}
 
 	/**
 	 * Get the form's form builder.
 	 *
-	 * @return \anlutro\LaravelForm\Builder
+	 * @return \anlutro\Form\Builder
 	 */
 	public function getBuilder()
 	{
@@ -158,6 +162,17 @@ class AbstractForm
 		}
 
 		return $input;
+	}
+
+	/**
+	 * Get the raw, un-transformed input.
+	 *
+	 * @return array
+	 */
+	public function getRawInput()
+	{
+		$this->checkInputSet();
+		return $this->input;
 	}
 
 	/**
@@ -270,36 +285,31 @@ class AbstractForm
 	 */
 	public function isValid($input = null)
 	{
-		if (!$rules = $this->getValidationRules()) return true;
-
 		if ($input === null) {
 			$this->checkInputSet();
 			$input = $this->input;
 		}
 
 		if ($this->validator === null) {
-			$this->validator = $this->form->makeValidator($input, $rules);
+			$this->validator = $this->validation->make($this);
 		}
 
-		return $this->validator->passes();
+		return $this->validation->isValid($this->validator);
 	}
 
 	/**
 	 * Get validation errors.
 	 *
-	 * @return \Illuminate\Support\MessageBag
+	 * @return mixed
 	 */
 	public function getErrors()
 	{
-		return $this->validator->errors();
-	}
+		if ($this->validator === null) {
+			throw new \RuntimeException('Form does not have a validatorassociated to it. Make sure to call isValid() before getErrors().');
+		}
 
-	/**
-	 * Get the form's validation rules.
-	 *
-	 * @return array
-	 */
-	public function getValidationRules() {}
+		return $this->validation->getErrors($this->validator);
+	}
 
 	/**
 	 * Get the transformed output of an input field.

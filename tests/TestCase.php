@@ -1,11 +1,13 @@
 <?php
-namespace anlutro\LaravelForm\Tests;
+namespace anlutro\Form\Tests;
 
 use PHPUnit_Framework_TestCase;
 use Mockery as m;
 use Illuminate\Session\Store;
 use Illuminate\Html\HtmlBuilder;
-use anlutro\LaravelForm\Builder;
+use anlutro\Form\Builder;
+use anlutro\Form\Adapters\LaravelSessionAdapter;
+use anlutro\Form\Adapters\LaravelValidationAdapter;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase
@@ -23,26 +25,19 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 
 	protected function makeFormBuilder()
 	{
-		$url = $this->mockUrlGenerator();
-		$html = new HtmlBuilder($url);
-		$this->validator = m::mock('Illuminate\Validation\Factory');
-		$formBuilder = new Builder($html, $this->validator);
+		$formBuilder = new Builder();
 		$this->session = new Store('test', new NullSessionHandler);
-		$formBuilder->setSession($this->session);
+		$formBuilder->setSession(new LaravelSessionAdapter($this->session));
+		$this->validator = m::mock('Illuminate\Validation\Factory');
+		$formBuilder->setValidationAdapter(new LaravelValidationAdapter($this->validator));
 		return $formBuilder;
-	}
-
-	protected function mockUrlGenerator()
-	{
-		$mock = m::mock('Illuminate\Routing\UrlGenerator');
-		$mock->shouldReceive('current')->andReturn('/');
-		return $mock;
 	}
 
 	protected function mockRequest($form, array $input)
 	{
-		$mockRequest = m::mock('Illuminate\Http\Request');
-		$mockRequest->shouldReceive('input')->andReturn($input);
+		$mockRequest = m::mock('Symfony\Component\HttpFoundation\Request');
+		$mockRequest->request = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
+		$mockRequest->request->shouldReceive('all')->andReturn($input);
 		$form->getBuilder()->setRequest($mockRequest);
 	}
 }

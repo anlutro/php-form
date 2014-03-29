@@ -1,11 +1,11 @@
-# Laravel 4 Form Builder [![Build Status](https://travis-ci.org/anlutro/laravel-form.png?branch=master)](https://travis-ci.org/anlutro/laravel-form) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-form.svg)](https://github.com/anlutro/laravel-form/releases)
-Sick of the default Laravel 4 form builder, this is my replacement. Improvements include:
+# PHP Form Builder [![Build Status](https://travis-ci.org/anlutro/php-form.png?branch=master)](https://travis-ci.org/anlutro/php-form) [![Latest Version](http://img.shields.io/github/tag/anlutro/php-form.svg)](https://github.com/anlutro/php-form/releases)
+Sick of the default Laravel 4 form builder, I wrote my own and made it framework-agnostic. Improvements include:
 
 - Each form is its own instance - no singletons, no shared states
 - Form model binding is enforced, you can no longer pass the value of the input in the view
 - Form model binding works properly with mixes of objects and arrays as well as relationships (checkboxes and relationships work out of the box)
 - Write a class for your more advanced forms, define input types, input transformer and field presenter methods
-- If not checked, Checkbox values are false instead of not present in the input array
+- If not checked, checkbox values are false instead of not present in the input array
 - Arrays of checkbox values come back as an empty array if none are checked
 - Various bugfixes and simplification of interface
 
@@ -21,7 +21,7 @@ Please open an issue if you find more.
 
 Pick the latest stable version from packagist or the GitHub tag list.
 
-Add 'anlutro\LaravelForm\ServiceProvider' to the list of providers in app/config/app.php.
+Add 'anlutro\Form\ServiceProvider' to the list of providers in app/config/app.php.
 
 WARNING: Backwards compatibility is not guaranteed during version 0.x.
 
@@ -31,7 +31,7 @@ Note that usage of this library will add extra lines of code to your project and
 Start by creating a class representation of your form.
 
 ```php
-use anlutro\LaravelForm\AbstractForm;
+use anlutro\Form\AbstractForm;
 class MyForm extends AbstractForm {}
 ```
 

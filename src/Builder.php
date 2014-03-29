@@ -1,18 +1,17 @@
 <?php
 /**
- * Laravel 4 Form Builder
+ * PHP Form Builder
  *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
- * @package  l4-form
+ * @package  php-form
  */
 
-namespace anlutro\LaravelForm;
+namespace anlutro\Form;
 
-use Illuminate\Html\HtmlBuilder;
-use Illuminate\Session\Store;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Factory;
+use Symfony\Component\HttpFoundation\Request;
+use anlutro\Form\Adapters\SessionAdapterInterface;
+use anlutro\Form\Adapters\ValidationAdapterInterface;
 use Illuminate\Support\Str;
 
 /**
@@ -21,39 +20,24 @@ use Illuminate\Support\Str;
 class Builder
 {
 	/**
-	 * @var \Illuminate\Html\HtmlBuilder
-	 */
-	protected $html;
-
-	/**
-	 * @var \Illuminate\Session\Store
+	 * @var \anlutro\Form\Adapters\SessionAdapterInterface
 	 */
 	protected $session;
 
 	/**
-	 * @var \Illuminate\Http\Request
+	 * @var \Symfony\Component\HttpFoundation\Request
 	 */
 	protected $request;
 
 	/**
-	 * @var \Illuminate\Validation\Factory
+	 * @var \anlutro\Form\Adapters\ValidationAdapterInterface
 	 */
-	protected $validator;
-
-	/**
-	 * @param \Illuminate\Html\HtmlBuilder   $html
-	 * @param \Illuminate\Validation\Factory $validator
-	 */
-	public function __construct(HtmlBuilder $html, Factory $validator)
-	{
-		$this->html = $html;
-		$this->validator = $validator;
-	}
+	protected $validation;
 
 	/**
 	 * Set the request instance.
 	 *
-	 * @param \Illuminate\Http\Request $request
+	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function setRequest(Request $request)
 	{
@@ -63,11 +47,26 @@ class Builder
 	/**
 	 * Set the session instance.
 	 *
-	 * @param \Illuminate\Session\Store $session
+	 * @param \anlutro\Form\Adapters\SessionAdapterInterface $session
 	 */
-	public function setSession(Store $session)
+	public function setSession(SessionAdapterInterface $session)
 	{
 		$this->session = $session;
+	}
+
+	/**
+	 * Set the form builder's validation adapter.
+	 *
+	 * @param \anlutro\Form\Adapters\ValidationAdapterInterface $validation
+	 */
+	public function setValidationAdapter(ValidationAdapterInterface $validation)
+	{
+		$this->validation = $validation;
+	}
+
+	public function getValidationAdapter()
+	{
+		return $this->validation;
 	}
 
 	/**
@@ -104,7 +103,7 @@ class Builder
 			$append .= $this->token();
 		}
 
-		$attributes = $this->html->attributes($attributes);
+		$attributes = $this->attributes($attributes);
 
 		return '<form'.$attributes.'>'.$append;
 	}
@@ -125,12 +124,12 @@ class Builder
 		if (!isset($attributes['id'])) $attributes['id'] = $this->nameToId($attributes['name']);
 
 		if ($type == 'textarea') {
-			$attributes = $this->html->attributes($attributes);
+			$attributes = $this->attributes($attributes);
 			return "<textarea{$attributes}>".e($value)."</textarea>";
 		} else {
 			$attributes['type'] = $type;
 			$attributes['value'] = $value;
-			$attributes = $this->html->attributes($attributes);
+			$attributes = $this->attributes($attributes);
 			return '<input'.$attributes.'>';
 		}
 	}
@@ -170,7 +169,7 @@ class Builder
 		if (!isset($attributes['name'])) $attributes['name'] = $name;
 		if (!isset($attributes['id'])) $attributes['id'] = $this->nameToId($attributes['name']);
 
-		$attributes = $this->html->attributes($attributes);
+		$attributes = $this->attributes($attributes);
 		$html = "<select{$attributes}>";
 
 		foreach ($options as $value => $label) {
@@ -200,7 +199,7 @@ class Builder
 		if (!isset($attributes['id'])) $attributes['id'] = $this->nameToId($attributes['name'].'__label');
 		if (!isset($attributes['for'])) $attributes['for'] = $name;
 
-		$attributes = $this->html->attributes($attributes);
+		$attributes = $this->attributes($attributes);
 		return "<label{$attributes}>{$text}</label>";
 	}
 
@@ -237,6 +236,29 @@ class Builder
 	public function close()
 	{
 		return '</form>';
+	}
+
+	/**
+	 * Build an HTML attribute string from an array.
+	 *
+	 * @param  array  $attributes
+	 * @return string
+	 */
+	public function attributes($attributes)
+	{
+		$html = array();
+
+		foreach ((array) $attributes as $key => $value) {
+			if (is_numeric($key)) {
+				$key = $value;
+			}
+
+			if ($value !== null) {
+				$html[] = $key.'="'.e($value).'"';
+			}
+		}
+
+		return empty($html) ? '' : ' '.implode(' ', $html);
 	}
 
 	/**
@@ -294,7 +316,7 @@ class Builder
 	 */
 	public function getRequestData()
 	{
-		return $this->request !== null ? $this->request->input() : [];
+		return $this->request !== null ? $this->request->request->all() : [];
 	}
 
 	/**
@@ -309,6 +331,10 @@ class Builder
 	 */
 	public function makeValidator(array $input, array $rules, array $messages = array(), array $customAttributes = array())
 	{
+		if ($this->validator === null) {
+			throw new \RuntimeException('Cannot make validator as validation factory is not set');
+		}
+
 		return $this->validator->make($input, $rules, $messages, $customAttributes);
 	}
 }

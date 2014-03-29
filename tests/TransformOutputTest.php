@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\LaravelForm\Tests;
+namespace anlutro\Form\Tests;
 
 use Mockery as m;
 
@@ -16,7 +16,7 @@ class Test extends TestCase
 	}
 }
 
-class TransformOutputFormStub extends \anlutro\LaravelForm\AbstractForm
+class TransformOutputFormStub extends \anlutro\Form\AbstractForm
 {
 	public function outputFoo($value)
 	{

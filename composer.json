@@ -18,8 +18,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"anlutro\\LaravelForm\\": "src/",
-			"anlutro\\LaravelForm\\Tests\\": "tests/"
+			"anlutro\\Form\\": "src/",
+			"anlutro\\Form\\Tests\\": "tests/"
 		}
 	},
 	"minimum-stability": "stable"

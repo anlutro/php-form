@@ -1,5 +1,5 @@
 <?php
-class SimpleForm extends anlutro\LaravelForm\AbstractForm
+class SimpleForm extends anlutro\Form\AbstractForm
 {
 	/**
 	 * Define what types of inputs your form contains. The default is text, so
