@@ -1,6 +1,6 @@
 {
-	"name": "anlutro/l4-form",
-	"description": "Form builder improvements and additions for Laravel 4.",
+	"name": "anlutro/php-form",
+	"description": "Dynamic form builder.",
 	"license": "MIT",
 	"authors": [
 		{
@@ -10,7 +10,6 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"illuminate/html": "~4.1",
 		"illuminate/support": "~4.1"
 	},
 	"require-dev": {
