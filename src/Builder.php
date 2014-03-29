@@ -96,6 +96,7 @@ class Builder
 		$method = strtoupper($attributes['method']);
 
 		if ($method !== 'GET' && $method !== 'POST') {
+			$attributes['method'] = 'post';
 			$append .= $this->input('hidden', '_method', $method);
 		}
 
@@ -125,12 +126,12 @@ class Builder
 
 		if ($type == 'textarea') {
 			$attributes = $this->html->attributes($attributes);
-			return "<textarea $attributes>".e($value)."</textarea>";
+			return "<textarea{$attributes}>".e($value)."</textarea>";
 		} else {
 			$attributes['type'] = $type;
 			$attributes['value'] = $value;
 			$attributes = $this->html->attributes($attributes);
-			return '<input '.$attributes.'>';
+			return '<input'.$attributes.'>';
 		}
 	}
 
@@ -170,7 +171,7 @@ class Builder
 		if (!isset($attributes['id'])) $attributes['id'] = $this->nameToId($attributes['name']);
 
 		$attributes = $this->html->attributes($attributes);
-		$html = "<select $attributes>";
+		$html = "<select{$attributes}>";
 
 		foreach ($options as $value => $label) {
 			if ($value == $selected) {
@@ -200,7 +201,7 @@ class Builder
 		if (!isset($attributes['for'])) $attributes['for'] = $name;
 
 		$attributes = $this->html->attributes($attributes);
-		return "<label $attributes>$text</label>";
+		return "<label{$attributes}>{$text}</label>";
 	}
 
 	/**
@@ -236,6 +237,16 @@ class Builder
 	public function close()
 	{
 		return '</form>';
+	}
+
+	/**
+	 * Determine if there is old input present in the session.
+	 *
+	 * @return boolean
+	 */
+	public function hasOldInput()
+	{
+		return isset($this->session) && $this->session->hasOldInput();
 	}
 
 	/**

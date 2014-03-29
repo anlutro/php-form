@@ -80,6 +80,16 @@ class AbstractForm
 	}
 
 	/**
+	 * Get the form's form builder.
+	 *
+	 * @return \anlutro\LaravelForm\Builder
+	 */
+	public function getBuilder()
+	{
+		return $this->form;
+	}
+
+	/**
 	 * Set the form model.
 	 *
 	 * @param mixed $model
@@ -108,7 +118,7 @@ class AbstractForm
 	 */
 	public function value($name)
 	{
-		return $this->form->getOldInput($name) ?: $this->getTransformedOutput($name);
+		return $this->form->hasOldInput() ? $this->form->getOldInput($name) : $this->getTransformedOutput($name);
 	}
 
 	/**
@@ -162,7 +172,7 @@ class AbstractForm
 	{
 		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
 
-		return $this->form->input($type, $name, $this->getTransformedOutput($name), $attributes);
+		return $this->form->input($type, $name, $this->value($name), $attributes);
 	}
 
 	/**
@@ -177,7 +187,7 @@ class AbstractForm
 	{
 		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
 
-		return $this->form->checkbox($name, $value, (bool) $this->getTransformedOutput($name), $attributes);
+		return $this->form->checkbox($name, $value, (bool) $this->value($name), $attributes);
 	}
 
 	/**
@@ -194,7 +204,7 @@ class AbstractForm
 	{
 		$method = 'get' . Str::studly($name) . 'Options';
 		$options = $this->$method();
-		$selected = $this->getValueFromModel($name);
+		$selected = $this->value($name);
 		return $this->form->select($name, $options, $selected, $attributes);
 	}
 
