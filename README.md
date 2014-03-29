@@ -1,4 +1,4 @@
-# Laravel 4 Form Builder [![Build Status](https://travis-ci.org/anlutro/laravel-form.png?branch=master)](https://travis-ci.org/anlutro/laravel-form)
+# Laravel 4 Form Builder [![Build Status](https://travis-ci.org/anlutro/laravel-form.png?branch=master)](https://travis-ci.org/anlutro/laravel-form) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-form.svg)](https://github.com/anlutro/laravel-form/releases)
 Sick of the default Laravel 4 form builder, this is my replacement. Improvements include:
 
 - Each form is its own instance - no singletons, no shared states
