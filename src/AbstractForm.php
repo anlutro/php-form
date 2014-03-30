@@ -194,11 +194,28 @@ class AbstractForm
 	 * Render a checkbox.
 	 *
 	 * @param  string $name
+	 * @param  string $value
 	 * @param  array  $attributes
 	 *
 	 * @return string
 	 */
 	public function checkbox($name, $value = '1', array $attributes = array())
+	{
+		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
+
+		return $this->form->checkbox($name, $value, (bool) $this->value($name), $attributes);
+	}
+
+	/**
+	 * Render a radio input.
+	 *
+	 * @param  string $name
+	 * @param  string $value
+	 * @param  array  $attributes
+	 *
+	 * @return string
+	 */
+	public function radio($name, $value = '1', array $attributes = array())
 	{
 		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
 

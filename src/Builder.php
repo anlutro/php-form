@@ -138,6 +138,7 @@ class Builder
 	 * Render a checkbox.
 	 *
 	 * @param  string  $name
+	 * @param  string  $value
 	 * @param  boolean $checked
 	 * @param  array   $attributes
 	 *
@@ -152,6 +153,27 @@ class Builder
 		}
 
 		return $this->input('checkbox', $name, $value, $attributes);
+	}
+
+	/**
+	 * Render a radio input.
+	 *
+	 * @param  string  $name
+	 * @param  string  $value
+	 * @param  boolean $checked
+	 * @param  array   $attributes
+	 *
+	 * @return string
+	 */
+	public function radio($name, $value = '1', $checked = false, array $attributes = array())
+	{
+		if ($checked) {
+			$attributes['checked'] = 'checked';
+		} else {
+			unset($attributes['checked']);
+		}
+
+		return $this->input('radio', $name, $value, $attributes);
 	}
 
 	/**
