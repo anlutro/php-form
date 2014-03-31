@@ -49,7 +49,7 @@ class Builder
 	 *
 	 * @param \anlutro\Form\Adapters\SessionAdapterInterface $session
 	 */
-	public function setSession(SessionAdapterInterface $session)
+	public function setSessionAdapter(SessionAdapterInterface $session)
 	{
 		$this->session = $session;
 	}
