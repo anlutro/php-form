@@ -27,7 +27,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 	{
 		$formBuilder = new Builder();
 		$this->session = new Store('test', new NullSessionHandler);
-		$formBuilder->setSession(new LaravelSessionAdapter($this->session));
+		$formBuilder->setSessionAdapter(new LaravelSessionAdapter($this->session));
 		$this->validator = m::mock('Illuminate\Validation\Factory');
 		$formBuilder->setValidationAdapter(new LaravelValidationAdapter($this->validator));
 		return $formBuilder;
