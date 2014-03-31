@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Collection;
 /**
  * Class representation of a form.
  */
-class AbstractForm
+abstract class AbstractForm
 {
 	/**
 	 * @var \anlutro\Form\Builder
@@ -42,6 +42,13 @@ class AbstractForm
 	 * @var string
 	 */
 	protected $action;
+
+	/**
+	 * The form HTTP method.
+	 *
+	 * @var string
+	 */
+	protected $method = 'post';
 
 	/**
 	 * The inputs defined on the form.
@@ -111,6 +118,16 @@ class AbstractForm
 	public function setAction($action)
 	{
 		$this->action = $action;
+	}
+
+	/**
+	 * Set the form HTTP method.
+	 *
+	 * @param string $method
+	 */
+	public function setMethod($method)
+	{
+		$this->method = $method;
 	}
 
 	/**
@@ -263,8 +280,12 @@ class AbstractForm
 	 */
 	public function open(array $attributes = array())
 	{
-		if ($this->action !== null) {
+		if (!isset($attributes['action']) && $this->action !== null) {
 			$attributes['action'] = $this->action;
+		}
+
+		if (!isset($attributes['method'])) {
+			$attributes['method'] = $this->action;
 		}
 
 		return $this->form->open($attributes);
