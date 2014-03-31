@@ -29,7 +29,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		{
 			$builder = new Builder();
 
-			$builder->setSession($app->make('anlutro\Form\Adapters\SessionAdapterInterface'));
+			$builder->setSessionAdapter($app->make('anlutro\Form\Adapters\SessionAdapterInterface'));
 
 			// validation service provider is deferred so we have to do this
 			// instead of $app->bound('validator')
@@ -37,7 +37,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 				'Illuminate\Validation\ValidationServiceProvider',
 				$app['config']->get('app.providers'))
 			) {
-				$builder->setValidationFactory($app->make('anlutro\Form\Adapters\ValidationAdapterInterface'));
+				$builder->setValidationAdapter($app->make('anlutro\Form\Adapters\ValidationAdapterInterface'));
 			}
 
 			// set the current request if there is one
