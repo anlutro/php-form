@@ -285,7 +285,7 @@ abstract class AbstractForm
 		}
 
 		if (!isset($attributes['method'])) {
-			$attributes['method'] = $this->action;
+			$attributes['method'] = $this->method;
 		}
 
 		return $this->form->open($attributes);
