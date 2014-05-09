@@ -18,6 +18,10 @@ class SimpleFormTest extends TestCase
 		$this->assertContains('</form', $form->close());
 		$form->setAction('http://www.foo.com');
 		$this->assertContains('action="http://www.foo.com"', $form->open());
+		$form->setMethod('post');
+		$this->assertContains('method="post"', $form->open());
+		$form->setMethod('get');
+		$this->assertContains('method="get"', $form->open());
 	}
 
 	/** @test */
@@ -33,6 +37,7 @@ class SimpleFormTest extends TestCase
 	{
 		$form = $this->makeForm('SimpleFormStub');
 		$str = $form->open(['method' => 'delete']);
+		$this->assertContains('method="post"', $str);
 		$this->assertContains('<input name="_method" id="_method" type="hidden" value="DELETE">', $str);
 	}
 
