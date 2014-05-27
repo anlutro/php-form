@@ -16,13 +16,13 @@ class LaravelValidationAdapter implements ValidationAdapterInterface
 		$input = $form->getRawInput();
 
 		if (!method_exists($form, 'getValidationRules')) {
-			return true;
+			return false;
 		}
 
 		$rules = $form->getValidationRules();
 
 		if (empty($rules)) {
-			return true;
+			return false;
 		}
 
 		return $this->factory->make($input, $rules);

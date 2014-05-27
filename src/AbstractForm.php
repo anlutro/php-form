@@ -12,6 +12,8 @@ namespace anlutro\Form;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 
+use anlutro\Form\Adapters\ValidationAdapterInterface;
+
 /**
  * Class representation of a form.
  */
@@ -328,11 +330,11 @@ abstract class AbstractForm
 			$input = $this->input;
 		}
 
-		if ($this->validation !== null) {
+		if ($this->validation !== null && $this->validator === null) {
 			$this->validator = $this->validation->make($this);
 		}
 
-		if ($this->validator !== null) {
+		if ($this->validator) {
 			return $this->validation->isValid($this->validator);
 		}
 

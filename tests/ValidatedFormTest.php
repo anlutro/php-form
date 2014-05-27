@@ -20,9 +20,17 @@ class ValidatedFormTest extends TestCase
 	}
 
 	/** @test */
+	public function formIsValidWithoutRules()
+	{
+		$form = $this->makeForm('UnValidatedFormStub');
+		$this->mockRequest($form, ['foo' => 'bar']);
+		$this->assertTrue($form->isValid());
+	}
+
+	/** @test */
 	public function formIsValidWithoutValidator()
 	{
-		$form = new ValidatedFormStub($this->makeFormBuilder(false, true));
+		$form = new UnValidatedFormStub($this->makeFormBuilder(false, true));
 		$this->mockRequest($form, ['foo' => 'bar']);
 		$this->assertTrue($form->isValid());
 	}
@@ -35,3 +43,4 @@ class ValidatedFormStub extends \anlutro\Form\AbstractForm
 		return ['foo' => 'required'];
 	}
 }
+class UnValidatedFormStub extends \anlutro\Form\AbstractForm {}
