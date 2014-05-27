@@ -14,22 +14,33 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 {
 	protected $session;
 
-	protected function makeForm($class)
+	protected function makeForm($class, $formBuilder = null)
 	{
 		$self = get_class($this);
 		$namespace = substr($self, 0, strrpos($self, '\\'));
 		$class = $namespace . '\\' . $class;
 
-		return new $class($this->makeFormBuilder());
+		return new $class($formBuilder ?: $this->makeFormBuilder());
 	}
 
-	protected function makeFormBuilder()
+	protected function makeFormBuilder($validator = true, $session = true)
 	{
 		$formBuilder = new Builder();
-		$this->session = new Store('test', new NullSessionHandler);
-		$formBuilder->setSessionAdapter(new LaravelSessionAdapter($this->session));
-		$this->validator = m::mock('Illuminate\Validation\Factory');
-		$formBuilder->setValidationAdapter(new LaravelValidationAdapter($this->validator));
+
+		if ($session) {
+			$this->session = new Store('test', new NullSessionHandler);
+			$formBuilder->setSessionAdapter(new LaravelSessionAdapter($this->session));
+		} else {
+			$this->session = null;
+		}
+
+		if ($validator) {
+			$this->validator = m::mock('Illuminate\Validation\Factory');
+			$formBuilder->setValidationAdapter(new LaravelValidationAdapter($this->validator));
+		} else {
+			$this->validator = null;
+		}
+
 		return $formBuilder;
 	}
 

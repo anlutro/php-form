@@ -18,6 +18,14 @@ class ValidatedFormTest extends TestCase
 		$this->mockRequest($form, ['foo' => 'bar']);
 		$this->assertTrue($form->isValid());
 	}
+
+	/** @test */
+	public function formIsValidWithoutValidator()
+	{
+		$form = new ValidatedFormStub($this->makeFormBuilder(false, true));
+		$this->mockRequest($form, ['foo' => 'bar']);
+		$this->assertTrue($form->isValid());
+	}
 }
 
 class ValidatedFormStub extends \anlutro\Form\AbstractForm
