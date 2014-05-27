@@ -328,11 +328,15 @@ abstract class AbstractForm
 			$input = $this->input;
 		}
 
-		if ($this->validator === null && $this->validation !== null) {
+		if ($this->validation !== null) {
 			$this->validator = $this->validation->make($this);
 		}
 
-		return $this->validation->isValid($this->validator);
+		if ($this->validator !== null) {
+			return $this->validation->isValid($this->validator);
+		}
+
+		return true;
 	}
 
 	/**
