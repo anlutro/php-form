@@ -14,6 +14,8 @@
 	},
 	"require-dev": {
 		"mockery/mockery": "*",
+		"illuminate/database": "~4.1",
+		"illuminate/validation": "~4.1",
 		"illuminate/session": "~4.1"
 	},
 	"autoload": {

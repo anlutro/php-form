@@ -12,8 +12,6 @@ namespace anlutro\Form;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 
-use anlutro\Form\Adapters\ValidationAdapterInterface;
-
 /**
  * Class representation of a form.
  */
@@ -220,7 +218,7 @@ abstract class AbstractForm
 	 */
 	public function checkbox($name, $value = '1', array $attributes = array())
 	{
-		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
+		list(, $attributes) = $this->parseInputArgs($name, $attributes);
 
 		return $this->form->checkbox($name, $value, (bool) $this->value($name), $attributes);
 	}
@@ -236,7 +234,7 @@ abstract class AbstractForm
 	 */
 	public function radio($name, $value = '1', array $attributes = array())
 	{
-		list($type, $attributes) = $this->parseInputArgs($name, $attributes);
+		list(, $attributes) = $this->parseInputArgs($name, $attributes);
 
 		return $this->form->checkbox($name, $value, (bool) $this->value($name), $attributes);
 	}
@@ -319,16 +317,11 @@ abstract class AbstractForm
 	/**
 	 * Determine if input is valid.
 	 *
-	 * @param  array   $input  Leave out to fetch from the current request
-	 *
 	 * @return boolean
 	 */
-	public function isValid($input = null)
+	public function isValid()
 	{
-		if ($input === null) {
-			$this->checkInputSet();
-			$input = $this->input;
-		}
+		$this->checkInputSet();
 
 		if ($this->validation !== null && $this->validator === null) {
 			$this->validator = $this->validation->make($this);
@@ -349,7 +342,7 @@ abstract class AbstractForm
 	public function getErrors()
 	{
 		if ($this->validator === null) {
-			throw new \RuntimeException('Form does not have a validatorassociated to it. Make sure to call isValid() before getErrors().');
+			throw new \RuntimeException('Form does not have a validator associated to it. Make sure to call isValid() before getErrors().');
 		}
 
 		return $this->validation->getErrors($this->validator);
@@ -441,6 +434,8 @@ abstract class AbstractForm
 				return [$key, $matches];
 			}
 		}
+
+		return null;
 	}
 
 	/**

@@ -12,7 +12,6 @@ namespace anlutro\Form;
 use Symfony\Component\HttpFoundation\Request;
 use anlutro\Form\Adapters\SessionAdapterInterface;
 use anlutro\Form\Adapters\ValidationAdapterInterface;
-use Illuminate\Support\Str;
 
 /**
  * Stateless form HTML builder.
@@ -64,6 +63,9 @@ class Builder
 		$this->validation = $validation;
 	}
 
+	/**
+	 * @return \anlutro\Form\Adapters\ValidationAdapterInterface
+	 */
 	public function getValidationAdapter()
 	{
 		return $this->validation;
@@ -241,13 +243,15 @@ class Builder
 	/**
 	 * Render the CSRF token input.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function token()
 	{
 		if ($this->session !== null) {
 			return $this->input('hidden', '_token', $this->session->getToken());
 		}
+
+		return null;
 	}
 
 	/**
@@ -298,13 +302,15 @@ class Builder
 	 *
 	 * @param  string $name
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function getOldInput($name)
 	{
 		if (isset($this->session)) {
 			return $this->session->getOldInput($this->transformKey($name));
 		}
+
+		return null;
 	}
 
 	/**
@@ -339,24 +345,5 @@ class Builder
 	public function getRequestData()
 	{
 		return $this->request !== null ? $this->request->request->all() : [];
-	}
-
-	/**
-	 * Make a new validator instance.
-	 *
-	 * @param  array  $input
-	 * @param  array  $rules
-	 * @param  array  $messages
-	 * @param  array  $customAttributes
-	 *
-	 * @return \Illuminate\Validation\Validator
-	 */
-	public function makeValidator(array $input, array $rules, array $messages = array(), array $customAttributes = array())
-	{
-		if ($this->validator === null) {
-			throw new \RuntimeException('Cannot make validator as validation factory is not set');
-		}
-
-		return $this->validator->make($input, $rules, $messages, $customAttributes);
 	}
 }

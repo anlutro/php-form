@@ -1,10 +1,20 @@
 <?php
+/**
+ * PHP Form Builder
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-form
+ */
+
 namespace anlutro\Form\Adapters;
 
 use Illuminate\Session\Store;
 
 class LaravelSessionAdapter implements SessionAdapterInterface
 {
+	protected $session;
+
 	public function __construct(Store $session)
 	{
 		$this->session = $session;
