@@ -184,7 +184,7 @@ class SimpleFormTest extends TestCase
 	}
 
 	/** @test */
-	public function nesteObjectsAndArrays()
+	public function nestedObjectsAndArrays()
 	{
 		$obj = new \StdClass;
 		$obj->stuff = new \Illuminate\Support\Collection([5 => ['bar' => 'baz']]);
@@ -192,6 +192,16 @@ class SimpleFormTest extends TestCase
 		$form = $this->makeForm('SimpleFormStub');
 		$form->setModel($model);
 		$this->assertContains('value="baz"', $form->input('foo[stuff][5][bar]'));
+	}
+
+	/** @test */
+	public function returnsNullIfNestedValueIsNotTraversable()
+	{
+		$obj = new \StdClass;
+		$obj->foo = 'bar';
+		$form = $this->makeForm('SimpleFormStub');
+		$form->setModel($obj);
+		$this->assertNotContains('value=', $form->input('foo[5]'));
 	}
 }
 

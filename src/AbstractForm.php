@@ -411,7 +411,7 @@ abstract class AbstractForm
 			} elseif (is_object($data)) {
 				$data = isset($data->$key) ? $data->$key : null;
 			} else {
-				return $data;
+				return null;
 			}
 		}
 
