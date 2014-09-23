@@ -167,7 +167,7 @@ abstract class AbstractForm
 		// convert special input types
 		foreach ($this->inputs as $key => $type) {
 			if ($type == 'append') {
-				$method = 'input' . Str::studly($key);
+				$method = 'input' . $this->nameToStudly($key);
 				$input[$key] = $this->$method();
 			}
 
@@ -251,7 +251,7 @@ abstract class AbstractForm
 	 */
 	public function select($name, array $attributes = array())
 	{
-		$method = 'get' . Str::studly($name) . 'Options';
+		$method = 'get' . $this->nameToStudly($name) . 'Options';
 		$options = $this->$method();
 		$selected = $this->value($name);
 		return $this->form->select($name, $options, $selected, $attributes);
