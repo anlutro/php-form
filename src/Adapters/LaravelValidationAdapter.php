@@ -22,7 +22,7 @@ class LaravelValidationAdapter implements ValidationAdapterInterface
 	}
 
 	/**
-	 * @param AbstractForm $form
+	 * @param  AbstractForm $form
 	 *
 	 * @return \Illuminate\Validation\Validator|null
 	 */
@@ -40,7 +40,13 @@ class LaravelValidationAdapter implements ValidationAdapterInterface
 			return null;
 		}
 
-		return $this->factory->make($input, $rules);
+		$validator = $this->factory->make($input, $rules);
+
+		if (method_exists($form, 'configureValidator')) {
+			$form->configureValidator($validator);
+		}
+
+		return $validator;
 	}
 
 	/**
