@@ -11,7 +11,7 @@ WARNING: Backwards compatibility is not guaranteed during version 0.x.
 
 ## Installation
 
-`composer require anlutro/php-form`
+`composer require anlutro/form`
 
 Pick the latest stable version from packagist or the GitHub tag list.
 
