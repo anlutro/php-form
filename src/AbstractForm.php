@@ -236,7 +236,7 @@ abstract class AbstractForm
 	{
 		list(, $attributes) = $this->parseInputArgs($name, $attributes);
 
-		return $this->form->radio($name, $value, (bool) $this->value($name), $attributes);
+		return $this->form->radio($name, $value, $this->value($name) == $value, $attributes);
 	}
 
 	/**
