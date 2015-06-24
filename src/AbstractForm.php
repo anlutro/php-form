@@ -272,6 +272,20 @@ abstract class AbstractForm
 	}
 
 	/**
+	 * Render a hidden input.
+	 *
+	 * @param  string $name
+	 * @param  string $value
+	 * @param  array  $attributes
+	 *
+	 * @return string
+	 */
+	public function hidden($name, $value = null, array $attributes = array())
+	{
+		return $this->form->input('hidden', $name, $value ?: $this->value($name), $attributes);
+	}
+
+	/**
 	 * Open the form.
 	 *
 	 * @param  array  $attributes
