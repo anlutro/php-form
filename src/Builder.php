@@ -344,6 +344,15 @@ class Builder
 	 */
 	public function getRequestData()
 	{
-		return $this->request !== null ? $this->request->request->all() : [];
+		if ($this->request === null) {
+			return [];
+		}
+
+		$contentType = $this->request->headers->get('content-type');
+		if ($contentType && strpos($contentType, '/json') !== false) {
+			return json_decode($this->request->getContent(), true);
+		}
+
+		return $this->request->request->all();
 	}
 }

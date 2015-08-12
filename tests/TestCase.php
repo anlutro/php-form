@@ -44,11 +44,26 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 		return $formBuilder;
 	}
 
-	protected function mockRequest($form, array $input)
+	protected function makeRequest($form, array $input, $json = false)
 	{
-		$mockRequest = m::mock('Symfony\Component\HttpFoundation\Request');
-		$mockRequest->request = m::mock('Symfony\Component\HttpFoundation\ParameterBag');
-		$mockRequest->request->shouldReceive('all')->andReturn($input);
-		$form->getBuilder()->setRequest($mockRequest);
+		$body = '';
+		$request = [];
+
+		if ($json) {
+			$body = json_encode($input);
+		} else {
+			$request = $input;
+		}
+
+		$request = new \Symfony\Component\HttpFoundation\Request([], $request, [], [], [], [], $body);
+		if ($json) {
+			$request->headers->set('content-type', 'application/json');
+		}
+		$form->getBuilder()->setRequest($request);
+	}
+
+	protected function mockRequest($form, array $input, $json = false)
+	{
+		return $this->makeRequest($form, $input, $json);
 	}
 }
